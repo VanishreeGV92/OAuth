@@ -33,12 +33,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-
-
-
-
-
-
+import com.google.appengine.api.taskqueue.DeferredTask;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.datastore.Transaction;
 //import com.google.appengine.labs.repackaged.org.json.JSONException;
 //import com.google.appengine.labs.repackaged.org.json.JSONObject;
 import com.google.gson.Gson;
@@ -46,6 +45,10 @@ import com.google.gson.Gson;
 import com.mvc.spring.PMF;
 import com.mvc.spring.EmployeeLogin;
 import com.mvc.spring.EmployeeData;
+
+
+
+
 //import com.google.appengine.labs.repackaged.org.json.JSONObject;
 //import org.json.simple.JSONObject;
 //import org.json.simple.parser.JSONParser;
@@ -100,7 +103,7 @@ public class EmployeeController {
 		} catch (JSONException e) {
 
 			e.printStackTrace();
-		}
+		}          
 		// String access_token="";
 		String access_token = null;
 		try {
@@ -151,7 +154,23 @@ public class EmployeeController {
 			e.printStackTrace();
 		}
 
-
+	
+/// Task Queue
+		      //  Queue queue = QueueFactory.getDefaultQueue(); ** If we didn't configure any queue in queue.xml, then we should use 'getDefaultAueue();'
+		        Queue queue = QueueFactory.getQueue("Loginqueue");
+		                   queue.add(TaskOptions.Builder.withUrl("/users/oauth2callback").param("email", json_user_details.get("email").toString())
+		                		                                                         .param("Username", json_user_details.get("name").toString())
+		                		                                                         .param("Given name", json_user_details.get("given_name").toString())
+		                		                                                        // .param("Family name", json_user_details.get("Family name").toString())
+		                		                                                         .param("picture URL", json_user_details.get("picture").toString()));//To specify the options for the task. Here options include parameters for the task and the URL that is going to execute task.
+	                       // queue.add(transaction, TaskOptions.Builder.withUrl("/users/oauth2callback")) ;
+	                       // ofy().getTransaction();
+	                          //ofy().getTranscation();}
+	
+	                        
+	
+	
+	                        
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 	if (userEmail != null) {
 		Query q = pm.newQuery(EmployeeLogin.class);
@@ -183,6 +202,12 @@ public class EmployeeController {
 		pp.println("Gender is"+json_user_details.get("gender"));
 			
 System.out.println("This is the end of the code");
+
+     
+    
+
+   
+     
 //	return new ModelAndView(
 //			"welcome.jsp?mail=" + json_user_details.get("email") + "&username=" + json_user_details.get("name"));
 
