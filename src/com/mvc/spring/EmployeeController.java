@@ -10,6 +10,8 @@ import java.net.URLConnection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
@@ -36,6 +38,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.google.appengine.api.taskqueue.DeferredTask;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskHandle;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.datastore.Transaction;
 //import com.google.appengine.labs.repackaged.org.json.JSONException;
@@ -153,9 +156,11 @@ public class EmployeeController {
 	} catch (JSONException e) {		// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	
+	// private static final Logger log = Logger.getLogger(TaskqueueServlet.class.getName());
+	   
 /// Task Queue
+ //Push Queues
 		      //  Queue queue = QueueFactory.getDefaultQueue(); ** If we didn't configure any queue in queue.xml, then we should use 'getDefaultAueue();'
 		        Queue queue = QueueFactory.getQueue("Loginqueue");
 		                   queue.add(TaskOptions.Builder.withUrl("/users/oauth2callback").param("email", json_user_details.get("email").toString())
@@ -165,11 +170,22 @@ public class EmployeeController {
 		                		                                                         .param("picture URL", json_user_details.get("picture").toString()));//To specify the options for the task. Here options include parameters for the task and the URL that is going to execute task.
 	                       // queue.add(transaction, TaskOptions.Builder.withUrl("/users/oauth2callback")) ;
 	                       // ofy().getTransaction();
-	                          //ofy().getTranscation();}
+	                          //ofy().getTranscation();}*/
 	
-	                        
+/*	//PULL QUEUES
+ *            final int numberOfTasksToAdd = 100;
+	    final int numberOfTasksToLease = 100;
+	     boolean useTaggedTasks = true;
+
 	
 	
+	                    Queue queue = QueueFactory.getQueue("pull-queue");
+	                      
+	                    if (!useTaggedTasks) {
+	                        for (int i = 0; i < numberOfTasksToAdd; i++) {
+	                               queue.add(TaskOptions.Builder.withMethod(TaskOptions.Method.PULL)
+                                           .payload(json_user_details.get("email").toString()));    
+	             */
 	                        
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 	if (userEmail != null) {
@@ -201,8 +217,9 @@ public class EmployeeController {
 		pp.println("picture URL"+json_user_details.get("picture"));
 		pp.println("Gender is"+json_user_details.get("gender"));
 			
-System.out.println("This is the end of the code");
-
+      System.out.println("This is the end of the code");
+	                        
+	                        
      
     
 
