@@ -139,7 +139,7 @@ public class EmployeeController {
 		PrintWriter p=resp.getWriter();
 		
 
-		// code for sending accessed user details to display.jsp
+		
 		HttpSession session=req.getSession();
 	System.out.println(json_user_details);
        session.setAttribute("email",(String) json_user_details.get("email"));
@@ -156,6 +156,22 @@ public class EmployeeController {
 	} catch (JSONException e) {		// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	
+	
+	
+	
+	/*
+	 * private void TransferFunds(Key fromKey, Key toKey, long amount)
+{
+    using (var transaction = _db.BeginTransaction())
+    {
+        var entities = transaction.Lookup(fromKey, toKey);
+        entities[0]["balance"].IntegerValue -= amount;
+        entities[1]["balance"].IntegerValue += amount;
+        transaction.Update(entities);
+        transaction.Commit();
+    }
+}*/
 	
 	// private static final Logger log = Logger.getLogger(TaskqueueServlet.class.getName());
 	   
@@ -227,6 +243,15 @@ public class EmployeeController {
      
 //	return new ModelAndView(
 //			"welcome.jsp?mail=" + json_user_details.get("email") + "&username=" + json_user_details.get("name"));
+
+	}
+	
+	@RequestMapping(value = "cron", method = RequestMethod.GET)
+	public void e(ModelMap model,HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		 PersistenceManager pm= PMF.get().getPersistenceManager();
+		 Query c = pm.newQuery(EmployeeData.class);
+		 c.getFetchPlan().setFetchSize(2);
+    		pm.deletePersistent(c);
 
 	}
 	
@@ -329,6 +354,22 @@ public class EmployeeController {
 	    System.out.println(fbp.getUname());
 	    return new ModelAndView("welcome.jsp?mail=" + fbp.getUname());
 	}
+
+	
+    		/*
+    		 * private void TransferFunds(Key fromKey, Key toKey, long amount)
+{
+    using (var transaction = _db.BeginTransaction())
+    {
+        var entities = transaction.Lookup(fromKey, toKey);
+        entities[0]["balance"].IntegerValue -= amount;
+        entities[1]["balance"].IntegerValue += amount;
+        transaction.Update(entities);
+        transaction.Commit();
+    }
+}
+    		 */
+
 
 		
 	@RequestMapping(value = "", method = RequestMethod.GET)
@@ -492,7 +533,7 @@ public class EmployeeController {
 
 	    	PersistenceManager pm = PMF.get().getPersistenceManager();
 
-
+	    	//EmployeeData c = pm.get
     		EmployeeData c = pm.getObjectById(EmployeeData.class, key);
     		pm.deletePersistent(c);
     	}

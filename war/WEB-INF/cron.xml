@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding ="UTF-8"?>
 <cronentries>
 <cron>
-       <url></url>
+       <url> /users/cron</url>
        <description>Delete 2 entries</description>
        <schedule>every 2 minutes</schedule>
 </cron>
