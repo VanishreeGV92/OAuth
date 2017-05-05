@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding ="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
-<cron>
-       <url> /users/cron</url>
-       <description>Delete 2 entries</description>
-       <schedule>every 2 minutes</schedule>
-</cron>
+  <cron>
+    <url>/users/crontask1</url>
+    <description>Retry on jsdk</description>
+    <schedule>every 5 minutes</schedule>
+    <retry-parameters>
+      <min-backoff-seconds>2.5</min-backoff-seconds>
+      <max-doublings>5</max-doublings>
+    </retry-parameters>
+  </cron>
 </cronentries>

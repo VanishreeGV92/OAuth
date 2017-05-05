@@ -59,10 +59,13 @@ import com.mvc.spring.EmployeeData;
 @Controller
 @RequestMapping("/users")
 public class EmployeeController {
+	
+	private static final Logger log = Logger.getLogger(EmployeeData.class.getName());
+	
 	@RequestMapping(value = "/LoginWithGoogle")
 	public ModelAndView go() {
 		return new ModelAndView(
-				"redirect:https://accounts.google.com/o/oauth2/auth?redirect_uri=http://localhost:8888/users/oauth2callback&response_type=code&client_id=449161362660-mmf2004fms9panuosnvll682lnr2fb4g.apps.googleusercontent.com&approval_prompt=force&scope=email&access_type=online");
+				"redirect:https://accounts.google.com/o/oauth2/auth?redirect_uri=https://feisty-flames-164905.appspot.com/users/oauth2callback&response_type=code&client_id=449161362660-mmf2004fms9panuosnvll682lnr2fb4g.apps.googleusercontent.com&approval_prompt=force&scope=email&access_type=online");
 	}
 	
 	
@@ -83,7 +86,7 @@ public class EmployeeController {
 		
 		URL url = new URL("https://www.googleapis.com/oauth2/v4/token?"
 				+ "client_id=449161362660-mmf2004fms9panuosnvll682lnr2fb4g.apps.googleusercontent.com"
-				+ "&client_secret=jgC-oIBUtIYav8GGJ6db-er-&" + "redirect_uri=http://localhost:8888/users/oauth2callback&"
+				+ "&client_secret=jgC-oIBUtIYav8GGJ6db-er-&" + "redirect_uri=https://feisty-flames-164905.appspot.com/users/oauth2callback&"
 				+ "grant_type=authorization_code&" + "code=" + auth_code);
 		
 		
@@ -234,25 +237,39 @@ public class EmployeeController {
 		pp.println("Gender is"+json_user_details.get("gender"));
 			
       System.out.println("This is the end of the code");
-	                        
-	                        
-     
-    
+	}
+  
+      @RequestMapping(value = "/delete", method = RequestMethod.GET)
+  	public void ddelte(HttpServletRequest req, HttpServletResponse respon) throws IOException {               
+    	  PersistenceManager pm= PMF.get().getPersistenceManager();
+  		 Query c = pm.newQuery(EmployeeData.class);
+ 		 System.out.println(c);
+ 		 c.getFetchPlan().setFetchSize(2);
+     		pm.deletePersistent(c);
 
    
-     
+      }
 //	return new ModelAndView(
 //			"welcome.jsp?mail=" + json_user_details.get("email") + "&username=" + json_user_details.get("name"));
 
-	}
 	
-	@RequestMapping(value = "cron", method = RequestMethod.GET)
-	public void e(ModelMap model,HttpServletRequest req, HttpServletResponse resp) throws IOException {
+	
+	@RequestMapping(value = "/crontask1", method = RequestMethod.GET)
+	public void crontask(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		 System.out.println("inside cron job");
 		 PersistenceManager pm= PMF.get().getPersistenceManager();
+		 //EmployeeData c = new EmployeeData();
+		// c.setAge("20");
+		// pm.makePersistent(c);
+		 System.out.println("I am here");
 		 Query c = pm.newQuery(EmployeeData.class);
+		 @SuppressWarnings("unchecked")
+		 
+		 List<EmployeeData> list= (List<EmployeeData>) c.execute();
+		 log.info(c.toString());
 		 c.getFetchPlan().setFetchSize(2);
-    		pm.deletePersistent(c);
-
+    		pm.deletePersistent(list.get(0));
+    		
 	}
 	
 	@RequestMapping(value = "/LoginWithFacebook")
